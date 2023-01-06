@@ -1,0 +1,364 @@
+---
+title: "Lembar Jawaban UAS IS240 Praktek Probabilitas dan Statistika"
+author: "Rieva Putri Safa"
+date: "2021-05"
+output:
+  pdf_document: 
+    toc: yes
+    toc_depth: 4
+    number_sections: yes
+    keep_tex: yes
+  html_document: 
+    number_sections: yes
+  word_document: 
+    toc: yes
+    toc_depth: 4
+    highlight: tango
+    keep_md: yes
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+
+#a-----
+#berikut adalah library yang saya gunakan: readxl, ggplot2, moments, dan nortest
+library(readxl)
+library(ggplot2)
+library(moments)
+library(nortest)
+
+#Import data
+hidupsehat <- read_excel("LifestyleCOVID19.xlsx")
+View(hidupsehat)
+
+
+```{r message=FALSE, warning=FALSE}
+#Grafik1 ----
+#KATEGORIKAL MENGGUNAKAN BARPLOT 
+#(Apakah responden menjalankan pola hidup sehat)
+(menjalani_sehat <-table(hidupsehat$menjalani_sehat))
+barplot(menjalani_sehat,main="Distribusi Berdasarkan Responden Yang Menjalani Pola Hidup Sehat", xlab = "Menjalankan Pola Hidup Sehat", ylab = "Responden" ,col=rainbow(3))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "Iya" menjalankan pola hidup sehat , sedangkan yang paling rendah adalah "Tidak" tidak menjalankan pola hidup sehat. Dapat disimpulkan dari diagram batang di mana responden yang menjawab menjalankan pola hidup sehat (131 orang) lebih banyak daripada yang tidak menjalankan pola hidup sehat (80 orang) bahwa lebih banyak subjek penelitian kami yang menjalani pola hidup sehat pada daripada yang tidak menjalani pola hidup sehat masa pandemi.
+
+
+#Grafik 2----
+#NUMERIK MENGGUNAKAN BOXPLOT
+#(Tingkat perhatian responden terhadap pola hidup sehat)
+(perhatian_sehat <-table(hidupsehat$perhatian_sehat))
+judul <- "Distribusi Berdasarkan Kepentingan Pola Hidup Sehat"
+labely <- "Range Perhatian Terhadap Pola Hidup Sehat"
+boxplot(hidupsehat$perhatian_sehat, main = judul, ylab = labely )
+summary(hidupsehat$perhatian_sehat)
+
+shapiro.test(hidupsehat$perhatian_sehat) #Tidak Normal
+        
+
+#Kesimpulan------
+#Terdapat mean dari data ini adalah 3.478 dan mediannya 4.00. Boxplot ini memiliki outlier, yaitu tingkat perhatian dengan skala 1. Maka kesimpulannya adalah rata-rata dari hasil responden berskala 3.48 yang menunjukkan bahwa kepentingan pola hidup sehat bagi para responden sudah melebihi setengah dari skala.
+#Variable perhatian_sehat tidak mengikuti distribusi Gaussian
+#Terdapat outlier pada boxplot ini, yaitu pada tingkat perhatian pola hidup sehat dengan skala 1
+
+
+#Grafik 3----
+#KATEGORIKAL MENGGUNAKAN BARPLOT 
+#(Apakah responden menjalani kegiatan olahraga di masa pandemi)
+(olahraga_pandemi <-table(hidupsehat$olahraga_pandemi))
+barplot(olahraga_pandemi,main="Distribusi Berdasarkan Aktifitas Olahraga Masa Pandemi", xlab = "Melakukan Olahraga", ylab = "Responden" ,col=rainbow(8))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "Iya", sedangkan yang paling rendah adalah "Tidak". Dapat disimpulkan dari diagram batang di mana responden yang menjawab menjalankan kegiatan olahraga (151 orang) lebih banyak daripada yang tidak menjalankan kegiatan olahraga (60 orang) bahwa lebih banyak subjek penelitian kami yang menjalani kegiatan olahraga sedangkan sebagian kecil lainnya tidak menjalankan kegiatan olahraga pada masa pandemi. 
+
+
+#Grafik 4----
+#KATEGORIKAL MENGGUNAKAN BARPLOT
+#(Seberapa sering responden berolahraga dalam seminggu)
+(sering_olahraga <-table(hidupsehat$sering_olahraga))
+barplot(sering_olahraga,main="Distribusi Berdasarkan Berapakali Berolahraga", xlab = "Seringnya Berolahraga", ylab = "Responden" ,col=rainbow(8))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "1-2 kali", sedangkan yang paling rendah adalah "lebih dari 3 kali". Dapat disimpulkan dari diagram batang di mana frekeuensi berolahraga dalam seminggu yang dilakukan responden paling banyak adalah 1-2 kali (115 orang) lebih banyak daripada yang tidak berolahraga (54 orang), dan yang berolahraga sebanyak lebih dari 3 kali seminggu (42 orang)  bahwa mayoritas responden berolahraga 1 - 2 kali dalam seminggu dan yang lainnya berolahraga lebih dari 3 kali dalam seminggu sedangkan sisanya tidak berolahraga di masa pandemi.
+
+
+#Grafik 5----
+#KATEGORIKAL MENGGUNAKAN BARPLOT
+#(Berapa lama responden berolahraga dalam sehari)
+(durasi_olahraga <-table(hidupsehat$durasi_olahraga))
+barplot(durasi_olahraga,main="Distribusi Berdasarkan Durasi Olahraga", xlab = "Jangka Waktu", ylab = "Responden" ,col=rainbow(4))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "30 menit", sedangkan yang paling rendah adalah "lebih dari 1 jam". Dapat disimpulkan dari diagram batang di mana durasi berolahraga dalam sehari yang dilakukan responden paling banyak adalah 30 menit (87 orang) lebih banyak daripada yang tidak berolahraga sama sekali (57 orang), 1 jam (45 orang) dan yang berolahraga lebih dari 1 jam (22 orang)  bahwa durasi berolahraga mayoritas responden dalam sehari saat pandemi yaitu selama 30 menit, diikuti dengan banyaknya responden yang tidak berolahraga sama sekali, kemudian yang berolahraga selama 1 jam, dan sisanya berolahraga lebih dari 1 jam.
+
+
+#Grafik 6----
+#KATEGORIKAL MENGGUNAKAN BARPLOT
+#(Apakah responden tau, jika menjalani pola hidup sehat akan meminimalisir terjangkitnya penyakit)
+(sehat_minpenyakit <-table(hidupsehat$sehat_minpenyakit))
+barplot(sehat_minpenyakit,main="Distribusi Berdasarkan Pengetahuan Pola Hidup Sehat Meminimalisir Penyakit", xlab = "Data Pengetahuan", ylab = "Responden" ,col=rainbow(5))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "Iya", sedangkan yang paling rendah adalah "Tidak". Dapat disimpulkan dari diagram batang di mana responden yang memiliki pengetahuan jika pola hidup sehat dapat memilimalisir terjangkitnya penyakit (193 orang) lebih banyak daripada yang tidak memiliki pengetahuan jika pola hidup sehat dapat memilimalisir terjangkitnya penyakit (18 orang) bahwa lebih banyak responden mengetahui bahwa jika menjalankan pola hidup sehat akan meminimalisir resiko terkena penyakit.
+
+
+#Grafik 7----
+#KATEGORIKAL MENGGUNAKAN BARPLOT
+#(Seberapa sering responden terjangkit penyakit pada saat pandemi)
+(sering_penyakit <-table(hidupsehat$sering_penyakit))
+barplot(sering_penyakit,main="Distribusi Berdasarkan Seringnya Terjangkit Penyakit", xlab = " Terjangkit Penyakit", ylab = "Responden" ,col=rainbow(4))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "Jarang", sedangkan yang paling rendah adalah "Sering".Dapat disimpulkan dari diagram batang di mana responden yang jarang terjangkit penyakit selama pandemi (115 orang) lebih banyak daripada yang tidak pernah terjangkit penyakit (74 orang), dan yang sering terjangkit penyakit selama pandemi (22 orang)  bahwa mayoritas responden jarang terjangkit penyakit dan yang lainnya tidak pernah sakit sedangkan sebagian kecilnya sering sakit pada masa pandemi.
+
+
+#Grafik 8----
+#NUMERIK MENGGUNAKAN BOXPLOT
+#(Skala level keseriusan penyakit responden)
+(lv_penyakit <-table(hidupsehat$lv_penyakit))
+judul <- "Distribusi Berdasarkan Tingkat Keseriusan Penyakit"
+labely <- "Tingkat Keseriusan Penyakit"
+boxplot(hidupsehat$lv_penyakit, main = judul, ylab = labely)
+summary(hidupsehat$lv_penyakit)
+
+shapiro.test(hidupsehat$lv_penyakit) #Tidak Normal
+
+#Kesimpulan------
+#Dari boxplot diatas kesimpulan yang dapat kita ambil dari data hasil yang sudah kita raih adalah median dari tingkat keseriusan pada responden terdapat pada skala 1 dan rata-rata dari responden menjawab bahwa tingkat keseriusan penyakit mereka terdapat pada skala 1.1. 
+#Variable lv_Penyakit tidak mengikuti distribusi Gaussian
+#Tidak terdapat outlier
+
+
+#Grafik 9---- 
+#KATEGORIKAL MENGGUNAKAN BARPLOT
+#(Apakah pandemi meningkatkan tingkat depresi)
+(pandemi_depresi<-table(hidupsehat$pandemi_depresi))
+barplot(pandemi_depresi,
+        main="Distribusi Berdasarkan Apakah Pandemi Meningkatkan Depresi",
+        xlab = "Data Jawaban", ylab = "Responden" ,col=rainbow(2))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "Iya", sedangkan yang paling rendah adalah "Tidak". Dapat disimpulkan dari diagram batang di mana responden yang merasa bahwa pandemi meningkatkan tingkat depresi mereka (149 orang) lebih banyak daripada yang tidak merasa bahwa pandemi meningkatkan tingkat depresi mereka (62 orang) bahwa lebih banyak responden merasakan bahwa pandemi meningkatkan tingkat depresi seseorang dan sebagiannya lagi tidak merasakan.
+
+
+#Grafik 10---- 
+# KATEGORIKAL MENGGUNAKAN BARPLOT
+#(Apakah menjalankan pola hidup yang sehat akan mengurangi tingkat depresi)
+(sehat_mindepresi <-table(hidupsehat$sehat_mindepresi))
+barplot(sehat_mindepresi,
+        main="Distribusi Berdasarkan Pengetahuan Pola Hidup Sehat Meminimalisir Deperesi", 
+        xlab = "Data Pengetahuan", ylab = "Responden" ,col=rainbow(2))
+
+#Kesimpulan------
+#Frekuensi yang paling tinggi adalah "Iya", sedangkan yang paling rendah adalah "Tidak". Dapat disimpulkan dari diagram batang di mana responden yang memiliki pengetahuan jika pola hidup sehat dapat memilimalisir tingkat depresi (171 orang) lebih banyak daripada yang tidak memiliki pengetahuan jika pola hidup sehat tidak dapat memilimalisir tingkat depresi (40 orang) bahwa lebih banyak responden mengetahui bahwa jika menjalankan pola hidup sehat akan meminimalisir resiko terkena penyakit. Kesimpulan yang dapat diambil adalah sebagian besar responden mengetahui bahwa jika menjalankan pola hidup sehat akan meminimalisir tingkat depresi.
+```
+
+
+```{r message=FALSE, warning=FALSE}
+#Besaran Statistik----
+
+#Statistika Deskriptif
+#Tabel Frekuensi (Statistika Deskriptif Teknik Numerik )
+#1
+(Jenis_Kelamin <- table(hidupsehat$'Jenis Kelamin'))
+
+#2
+(Usia <- table(hidupsehat$Usia))
+
+#3
+(menjalani_sehat <- table(hidupsehat$menjalani_sehat))
+
+#4
+(perhatian_sehat <- table(hidupsehat$perhatian_sehat))
+
+#5
+(olahraga_pandemi <- table(hidupsehat$olahraga_pandemi))
+
+#6
+(sering_olahraga <- table(hidupsehat$sering_olahraga))
+
+#7
+(durasi_olahraga <- table(hidupsehat$durasi_olahraga))
+
+#8
+(sehat_minpenyakit <- table(hidupsehat$sehat_minpenyakit))
+
+#9
+(sering_penyakit <- table(hidupsehat$sering_penyakit))
+
+#10
+(lv_penyakit <- table(hidupsehat$lv_penyakit))
+
+#11
+(pandemi_depresi <- table(hidupsehat$pandemi_depresi))
+
+#12
+(mengurangi_depresi <- table(hidupsehat$mengurangi_depresi))
+
+#13
+(sehat_minpenyakit <- table(hidupsehat$sehat_mindepresi))
+
+
+##Tabulasi Data
+#1
+(polasehat_pandemi <- table(hidupsehat$perhatian_sehat, hidupsehat$menjalani_sehat))
+#Kesimpulan------
+#Tabulasi data menunjukkan tabel kontingensi dua arah antara aktivitas pola hidup sehat dengan perhatian pola hidup sehat. Tanggapan responden setuju terhadap argumen pola hidup sehat menjadi cara untuk terhindar dari depresi. Tabel kontingensi dua arah ini akan membantu kami dalam menjawab hipotesis kami dan menunjukkan adakah hubungan antara pola hidup sehat dengan terjangkitnya penyakit di masa pandemi COVID-19. 	
+
+#2
+(sehat_kondisi <- table(hidupsehat$menjalani_sehat, hidupsehat$sering_penyakit))
+#Kesimpulan------
+#Tabulasi data  menunjukkan tabel kontingensi dua arah antara  aktivitas pola hidup sehat dan seringnya terjangkit penyakit. kebanyakan responden yang menjalankan pola hidup sehat ataupun Tabel kontingensi dua arah ini akan membantu kami dalam menjawab hipotesis kami dan menunjukkan adakah hubungan antara menjalankan pola hidup sehat dengan seringnya terjangkit penyakit.  
+
+#3
+(polasehat_mindepresi <- table(hidupsehat$menjalani_sehat, hidupsehat$pandemi_depresi))
+#Kesimpulan------
+#Tabulasi data menunjukkan tabel kontingensi dua arah antara menjalani pola hidup sehat dengan potensi depresi di masa pandemi. Responden yang menjalankan ataupun tidak menjalankan pola hidup sehat di masa pandemi menganggap bahwa pandemi meningkatkan tingkat depresi seseorang. Tabel kontingensi dua arah ini akan membantu kami dalam menjawab hipotesis kami dan menunjukkan adakah hubungan antara menjalankan pola hidup sehat dengan tingkat depresi di masa pandemi.
+
+#4
+(durasi_penyakit <- table(hidupsehat$durasi_olahraga, hidupsehat$sering_penyakit))
+#Kesimpulan------
+#Tabulasi data menunjukkan tabel kontingensi dua arah antara durasi seorang individu berolahraga dengan rate terjangkitnya penyakit. Pada data responden dapat dengan jelas terlihat bahwa terdapat perbedaan yang signifikan di antara perbandingan durasi olahraga dengan terjangkitnya penyakit. Responden yang berolahraga dengan durasi 30 lebih jarang terjangkit penyakit dibandingkan responden yang menjalankan olahraga dengan durasi yang berbeda. Kita juga dapat melihat bahwa angka keseringan penyakit melonjak di saat responden tidak berolahraga sama sekali. Overall Tabel kontingensi dua arah ini akan membantu kami dalam menjawab hipotesis keempat kami. 
+
+#5
+(durasi_depresi <- table(hidupsehat$durasi_olahraga, hidupsehat$pandemi_depresi))
+#Kesimpulan------
+#Tabulasi data menunjukkan tabel kontingensi dua arah antara durasi responden melakukan olahraga dengan kesehatan mental responden. Perbedaan durasi olahraga pada responden yang tidak depresi lebih kecil dibanding dengan responden yang depresi. Tabel kontingensi dua arah ini akan membantu kami dalam menjawab hipotesis kami.
+
+#Simpangan baku, Mean, Skewness, dan Kurtosis
+sd(hidupsehat$lv_penyakit)
+mean(hidupsehat$lv_penyakit)
+
+(cv <- sd(hidupsehat$lv_penyakit) / mean(hidupsehat$lv_penyakit))
+
+skewness(hidupsehat$lv_penyakit)
+kurtosis(hidupsehat$lv_penyakit)
+
+#jika p-value >= 0.05 = data normal
+#jika p-value < 0.05 = data tidak normal
+
+shapiro.test(hidupsehat$lv_penyakit) #Tidak Normal
+#Variable lv_penyakit tidak mengikuti distribusi Gaussian
+#Tidak terdapat outlier
+
+
+
+```
+
+
+
+## (Bobot 50%) Uji Hipotesa 
+
+```{r message=FALSE, warning=FALSE}
+
+# Grafik untuk hipotesa 1----------
+# H0: Seseorang memperhatikan pola hidup sehat dimasa pandemi(TERIMA)
+# H1: Seseorang tidak memperhatikan pola hidup sehat dimasa pandemi
+judul <- "Distribusi Frekuensi Pola Hidup Sehat Vs Range Perhatian Pola Hidup Sehat"
+sbx <- "Range Perhatian Terhadap Pola Hidup Sehat"
+sby <- "Menjalani Hidup Sehat"
+boxplot(hidupsehat$perhatian_sehat ~ hidupsehat$menjalani_sehat, 
+        main = judul, xlab = sbx, ylab = sby)
+
+# Uji Hipotesa 1------
+#Menggunakan Chi-Square
+chisq.test(polasehat_pandemi)
+#Kesimpulan
+#berdasarkan hasil data p-value = 0.06448 diperoleh hasil H0 akan diterima tingkat signifikan α = 0.0949karena p-value < nilai kritis hi - square . Sehingga dapat ditarik kesimpulan terdapat bukti yang cukup untuk membuktikan bahwa: anggapan seseorang memperhatikan pola hidup sehat di masa pandemi COVID-19 saat ini.
+
+# Grafik untuk hipotesa 2----------
+# H0: Minat pola hidup sehat berpengaruh terhadap kondisi fisik seseorang (TERIMA)
+# H1: Kondisi fisik seseorang tidak dipengaruhi oleh minat pola hidup
+judul <- "Diagram Frekuensi Terjangkitnya Penyakit "
+sbX <- "Terjangkit Penyakit"
+sbY <- " Frekuensi"
+warna <- c("green", "red")
+legenda <- c("Menjalani Pola Hidup Sehat", "Tidak Menjalani Pola Hidup Sehat")
+barplot(sehat_kondisi,
+        main = judul, xlab = sbX, ylab = sbY, col = warna)
+legend("topright", legend = legenda, fill = warna)
+
+# Uji Hipotesa 2--------
+#Menggunakan Chi-Square
+chisq.test(sehat_kondisi)
+#Kesimpulan
+#Pada hipotesis 2 diperoleh hasil yaitu p-value = 0.003768. Hasil H0 akan diterima tingkat signifikan α = 0.0599 karena p-value < nilai kritis Chi - square.  
+#Sehingga, terdapat bukti yang cukup untuk menyatakan bahwa terdapat hubungan antara minat menjalankan pola hidup sehat di masa pandemi COVID-19 terhadap kondisi fisik seseorang. 
+
+# Grafik untuk hipotesa 3----------
+# H0: Pola hidup sehat meminimalisir timbulnya penyakit (TERIMA)
+# H1: Tidak ada hubungan antara pola hidup sehat dan timbulnya penyakit
+ggplot(hidupsehat) +
+        geom_bin2d(aes(x = menjalani_sehat, y = sering_penyakit)) +
+        scale_fill_gradient(low = ("red"),high = ("blue"))
+
+# Uji Hipotesa 3---------
+#Menggunakan Chi-Square
+chisq.test(sehat_kondisi)
+#Kesimpulan
+#Pada hipotesis 3 diperoleh hasil yaitu p-value = 0.003768. Hasil H0 akan diterima tingkat signifikan α = 0.0599 karena p-value < nilai kritis Chi - Square. Sehingga dapat dibuktikan bahwa ada hubungan antara pola hidup sehat dan timbulnya penyakit.
+#H0 diterima bahwa seseorang memperhatikan pola hidup sehat dimasa pandemi dapat meminimalisir datangnya penyakit. 
+
+
+# Grafik untuk hipotesa 4------
+# H0: Pola hidup sehat mengurangi tingkat depresi (TERIMA)
+# H1: Pola hidup sehat berhubungan dengan depresi
+judul <- "Distribusi Frekuensi Pola Hidup Sehat Vs Mengalami Depresi Dimasa Pandemi"
+sbx <- "Mengalami Depresi Saat Pandemi"
+sby <- "Frekuensi"
+warna <- c("green", "red")
+legenda <- rownames(polasehat_mindepresi)
+barplot(polasehat_mindepresi,
+        beside = TRUE, main = judul, xlab = sbx, ylab = sby, col = warna)
+legend("topright", legend = c("Menjalani Pola Hidup Sehat", "Tidak Menjalani Pola Hidup Sehat"), fill = warna)
+
+# Uji Hipotesa 4-------
+#Menggunakan Chi-Square
+chisq.test(polasehat_mindepresi)
+#Kesimpulan
+#Kesimpulan berdasarkan data  mengenai uji hipotesis 4 memiliki hasil p-value = 0.09763. Maka diperoleh hasil H0 ditolak pada level signifikan α = 0.00384 karena p-value > nilai kritis Chi - Square, maka menerima H1. Sehingga membuktikan bahwa pola hidup sehat berhubungan dengan depresi terutama di masa pandemi COVID-19 saat ini.
+
+# Grafik untuk hipotesa 5.1--------
+# H0: Durasi berolahraga berpengaruh pada pola hidup sehat seseorang (TERIMA)
+# H1: Durasi berolahraga tidak berpengaruh terhadap pola hidup sehat seseorang
+judul <- "Distribusi Frekuensi Durasi Olahraga Vs Mengalami Depresi Dimasa Pandemi"
+sbx <- "Mengalami Depresi Saat Pandemi"
+sby <- "Frekuensi"
+warna <- c("green", "red", "blue", "yellow")
+legenda <- rownames(durasi_depresi )
+barplot(durasi_depresi , 
+        beside = TRUE, main = judul, xlab = sbx, ylab = sby, col = warna)
+legend("topright", legend = c("1 Jam", "30 Menit","> 1 Jam","Tidak Olahraga"), fill = warna)
+
+# Uji Hipotesa 5.1-------
+#Menggunakan Chi-Square
+chisq.test(durasi_depresi)
+#Kesimpulan
+#Dikarenakan signifikansi dan taraf signifikansi (α) ditetapkan 0.05 (5%), dan nilai df = 3, maka disini kita mendapatkan nilai kritis sebesar = 7.81. Pada Chi-Square diperoleh p - value = 0.05919, seehingga diperoleh hasil H0 diterima pada level signifikan α = 0.00781 karena p-value < nilai kritis Chi - square, jadi H0 dapat diterima. Maka terdapat cukup bukti bahwa durasi berolahraga berpengaruh terhadap pola hidup sehat seseorang tepatnya dalam kesehatan mental seseorang.
+
+# Grafik untuk hipotesa 5.2--------
+# H0: Durasi berolahraga berpengaruh pada angka terjangkitnya penyakit
+# H1: Durasi berolahraga tidak berpengaruh terhadap angka terjangkitnya
+judul <- "Distribusi Frekuensi Durasi Olahraga Vs Terjangkitnya Penyakit"
+sbx <- "Terjangkit Penyakit"
+sby <- "Frekuensi"
+warna <- c("green", "red", "blue", "yellow")
+legenda <- rownames(durasi_penyakit )
+barplot(durasi_penyakit , 
+        beside = TRUE, main = judul, xlab = sbx, ylab = sby, col = warna)
+legend("topright", legend = c("1 Jam", "30 Menit","> 1 Jam","Tidak Olahraga"), fill = warna)
+
+
+# Uji Hipotesa 5.2-------
+#Menggunakan Chi-Square
+chisq.test(durasi_penyakit)
+#Kesimpulan
+#Dikarenakan signifikansi dan taraf signifikansi (α) ditetapkan 0.05 (5%), dan nilai df = 6, maka disini kita mendapatkan nilai kritis sebesar = 12.59. Pada Chi-Square diperoleh p-value = 0.08042. Sehingga diperoleh hasil H0 tidak ditolak pada level signifikan α = 0.08042 karena p-value < nilai kritis Chi - square, maka H0 diterima. Terdapat cukup bukti bahwa durasi berolahraga berpengaruh terhadap pola hidup sehat seseorang tepatnya dalam kesehatan fisik seseorang
+
+
+
+```
+
